@@ -1,0 +1,1 @@
+/home/wolfram/School/IT253\ OS/Project/RUST-API/Syscalls/target/package/linux_syscalls_x86_64-0.1.0/target/debug/linux_syscalls_x86_64: /home/wolfram/School/IT253\ OS/Project/RUST-API/Syscalls/target/package/linux_syscalls_x86_64-0.1.0/src/main.rs
