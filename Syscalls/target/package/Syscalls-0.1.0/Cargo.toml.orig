@@ -1,5 +1,5 @@
 [package]
-name = "linux_syscalls_x86_64"
+name = "Syscalls"
 version = "0.1.0"
 edition = "2021"
 description = "Linux x86_64 Syscalls"

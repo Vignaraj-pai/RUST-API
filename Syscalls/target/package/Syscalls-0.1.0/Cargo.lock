@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "linux_syscalls_x86_64"
+name = "Syscalls"
 version = "0.1.0"
