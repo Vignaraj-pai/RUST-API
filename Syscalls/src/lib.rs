@@ -9,6 +9,7 @@ pub enum LinuxSysCalls {
     Open = 2,
     Close = 3,
     WriteV = 20,
+    Fork = 57,
 }
 
 #[repr(u32)]
@@ -90,4 +91,8 @@ pub fn writev<const N: usize>(fd: u64, msgs: &[&CStr]) -> i64 {
 
 pub fn sys_close(fd: u64) -> i64 {
     unsafe { syscall(LinuxSysCalls::Close as u64, fd, 0, 0) }
+}
+
+pub fn sys_fork() -> i64 {
+    unsafe { syscall(LinuxSysCalls::Fork as u64, 0, 0, 0) }
 }
