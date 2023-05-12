@@ -3,7 +3,7 @@
 version = 3
 
 [[package]]
-name = "API"
+name = "api_in_rust"
 version = "0.0.1"
 dependencies = [
  "syscalls",
