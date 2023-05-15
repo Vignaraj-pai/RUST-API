@@ -1,18 +1,28 @@
-trait OInput<T>
+trait OInput1<T>
 {
     fn o_take_inp_1(&self, t: T);
+}
+
+trait OInput2<T, U, V>
+{
+    fn o_take_inp_2(&self, t: T, u: U, v: V);
 }
 
 struct Input;
 impl Input
 {
-    fn take_inp_1<T>(&self, t: T) where Self: OInput<T>
+    fn take_inp_1<T>(&self, t: T) where Self: OInput1<T>
     {
         self.o_take_inp_1(t);
     }
+
+    fn take_inp_2<T, U, V>(&self, t: T, u: U, v: V) where Self: OInput2<T, U, V>
+    {
+        self.o_take_inp_2(t, u, v);
+    }
 }
 
-impl OInput<&mut u64> for Input
+impl OInput1<&mut u64> for Input
 {
     fn o_take_inp_1(&self, t: &mut u64)
     {
@@ -39,7 +49,7 @@ impl OInput<&mut u64> for Input
     }
 }
 
-impl OInput<&mut i64> for Input
+impl OInput1<&mut i64> for Input
 {
     fn o_take_inp_1(&self, t: &mut i64)
     {
@@ -76,14 +86,43 @@ impl OInput<&mut i64> for Input
     }
 }
 
+impl OInput2<&mut String, i64, char> for Input
+{
+    fn o_take_inp_2(&self, t: &mut String, u: i64, v: char) {
+        t.clear();
+        let mut c: u8 = 0;
+        let mut i: i64 = 0;
+        let mut ch: char;
+        loop {
+            syscalls::sys_read(0, &mut c, 1);
+            ch = c as char;
+            if u != -1 && i >= u {
+                break;
+            }
+            if ch == v {
+                break;
+            }
+            t.push(ch);
+            i = i + 1;
+        }
+    }
+}
+
 macro_rules! input {
     ($arg:expr) => {
         Input.take_inp_1($arg);
     };
+
+    ($arg1:expr, $arg2:expr, $arg3:expr) => {
+        Input.take_inp_2($arg1, $arg2, $arg3);
+    }
 }
 
 fn main() {
     let mut inp: i64 = 0;
+    let mut line: String = "".to_string();
     input!(&mut inp);
+    input!(&mut line, 100, '\n');
     println!("{}", inp);
+    println!("{}", line);
 }
