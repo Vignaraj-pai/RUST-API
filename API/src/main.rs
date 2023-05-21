@@ -1,3 +1,9 @@
+use std::any::type_name;
+
+fn type_of<T>(_: T) -> &'static str {
+    type_name::<T>()
+}
+
 trait OInput1<T>
 {
     fn o_take_inp_1(&self, t: T);
@@ -118,11 +124,23 @@ macro_rules! input {
     }
 }
 
+macro_rules! output {
+    ($($arg:tt)*) => {
+        $(  
+            syscalls::sys_write(1, $arg.as_bytes().as_ptr(), $arg.len().try_into().unwrap());
+        )*
+    };
+}
+
+
 fn main() {
     let mut inp: i64 = 0;
     let mut line: String = "".to_string();
     input!(&mut inp);
     input!(&mut line, 100, '\n');
-    println!("{}", inp);
-    println!("{}", line);
+    let mut s = String::new();
+    s.push_str(&inp.to_string());
+    
+    output!("The number you entered is: " s "\n" "The sentence you entered is: " line "\n");
+    
 }
