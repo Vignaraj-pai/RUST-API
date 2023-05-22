@@ -57,12 +57,36 @@ macro_rules! open_file {
     }
 }
 
-fn main() {
-    let string:String = String::from("/workspaces/RUST-API/API/src/text.txt");
-    let fd = open_file!(string, FileFlags::O_CREAT);
-    if(fd<0)
-    {
-        println!("Error in finding or opening file having error code: {}",fd);
+trait CloseFile<T>
+{
+    fn close_file(t: T);
+}
+
+struct CloseFileSyscall;
+
+impl CloseFile<i64> for CloseFileSyscall
+{
+    fn close_file(t: i64) {
+        syscalls::sys_close(t as u64);
     }
-    println!("File Descriptor{}",fd);
+}
+
+macro_rules! close_file {
+    ($arg1:expr) => {
+        CloseFileSyscall::close_file($arg1);
+    }
+}
+
+fn main() {
+    // let string:String = String::from("/workspaces/RUST-API/API/src/text.txt");
+    // let fd = open_file!(string, FileFlags::O_CREAT);
+    // if(fd<0)
+    // {
+    //     println!("Error in finding or opening file having error code: {}",fd);
+    //     return;
+    // }
+    // println!("File Descriptor{}",fd);
+
+    let close = close_file!(3);
+    println!("File Closed with status: {}",close);
 }
