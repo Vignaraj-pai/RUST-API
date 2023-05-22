@@ -62,6 +62,11 @@ trait OInput2<T, U, V>
     fn o_take_inp_2(&self, t: T, u: U, v: V);
 }
 
+trait OOutput1<T>
+{
+    fn o_put_1(&self, t: T);
+}
+
 struct Input;
 impl Input
 {
@@ -162,6 +167,355 @@ impl OInput2<&mut String, i64, char> for Input
     }
 }
 
+struct Output;
+impl Output
+{
+    fn put_1<T>(&self, t: T) where Self: OOutput1<T>
+    {
+        self.o_put_1(t);
+    }
+}
+
+impl OOutput1<&str> for Output
+{
+    fn o_put_1(&self, t: &str)
+    {
+        syscalls::sys_write(1, t.as_bytes().as_ptr(), t.len().try_into().unwrap());
+    }
+}
+
+impl OOutput1<&String> for Output
+{
+    fn o_put_1(&self, t: &String)
+    {
+        syscalls::sys_write(1, t.as_bytes().as_ptr(), t.len().try_into().unwrap());
+    }
+}
+
+impl OOutput1<String> for Output
+{
+    fn o_put_1(&self, t: String)
+    {
+        syscalls::sys_write(1, t.as_bytes().as_ptr(), t.len().try_into().unwrap());
+    }
+}
+
+impl OOutput1<&char> for Output
+{
+    fn o_put_1(&self, t: &char)
+    {
+        let c: u8 = *t as u8;
+        syscalls::sys_write(1, &c, 1);
+    }
+}
+
+impl OOutput1<&u8> for Output
+{
+    fn o_put_1(&self, t: &u8)
+    {
+        syscalls::sys_write(1, t, 1);
+    }
+}
+
+impl OOutput1<&i8> for Output
+{
+    fn o_put_1(&self, t: &i8)
+    {
+        syscalls::sys_write(1, t as *const i8 as *const u8, 1);
+    }
+}
+
+impl OOutput1<u16> for Output
+{
+    fn o_put_1(&self, t: u16)
+    {
+        let mut num: u16 = t;
+        let mut arr: [u8; 20] = [0; 20];
+        let mut i: i64 = 0;
+        let mut j: i64;
+        let mut c: u8;
+        if num == 0 {
+            arr[0] = 48;
+            i = 1;
+        }
+        while num > 0 {
+            arr[i as usize] = (num % 10) as u8 + 48;
+            num = num / 10;
+            i = i + 1;
+        }
+        j = i - 1;
+        while j >= 0 {
+            syscalls::sys_write(1, &arr[j as usize], 1);
+            j = j - 1;
+        }
+    }
+}
+
+impl OOutput1<i16> for Output
+{
+    fn o_put_1(&self, t: i16)
+    {
+        let mut num: i16 = t;
+        let mut arr: [u8; 20] = [0; 20];
+        let mut i: i64 = 0;
+        let mut j: i64;
+        let mut c: u8;
+        let mut neg: bool = false;
+        if num == 0 {
+            arr[0] = 48;
+            i = 1;
+        }
+        if num < 0 {
+            neg = true;
+            num = -num;
+        }
+        while num > 0 {
+            arr[i as usize] = (num % 10) as u8 + 48;
+            num = num / 10;
+            i = i + 1;
+        }
+        if neg {
+            syscalls::sys_write(1, &45, 1);
+        }
+        j = i - 1;
+        while j >= 0 {
+            c = arr[j as usize];
+            syscalls::sys_write(1, &c, 1);
+            j = j - 1;
+        }
+    }
+}
+
+impl OOutput1<u32> for Output
+{
+    fn o_put_1(&self, t: u32)
+    {
+        let mut num: u32 = t;
+        let mut arr: [u8; 20] = [0; 20];
+        let mut i: i64 = 0;
+        let mut j: i64;
+        let mut c: u8;
+        if num == 0 {
+            arr[0] = 48;
+            i = 1;
+        }
+        while num > 0 {
+            arr[i as usize] = (num % 10) as u8 + 48;
+            num = num / 10;
+            i = i + 1;
+        }
+        j = i - 1;
+        while j >= 0 {
+            c = arr[j as usize];
+            syscalls::sys_write(1, &c, 1);
+            j = j - 1;
+        }
+    }
+}
+
+impl OOutput1<i32> for Output
+{
+    fn o_put_1(&self, t: i32)
+    {
+        let mut num: i32 = t;
+        let mut arr: [u8; 20] = [0; 20];
+        let mut i: i64 = 0;
+        let mut j: i64;
+        let mut c: u8;
+        let mut neg: bool = false;
+        if num == 0 {
+            arr[0] = 48;
+            i = 1;
+        }
+        if num < 0 {
+            neg = true;
+            num = -num;
+        }
+        while num > 0 {
+            arr[i as usize] = (num % 10) as u8 + 48;
+            num = num / 10;
+            i = i + 1;
+        }
+        if neg {
+            syscalls::sys_write(1, &45, 1);
+        }
+        j = i - 1;
+        while j >= 0 {
+            c = arr[j as usize];
+            syscalls::sys_write(1, &c, 1);
+            j = j - 1;
+        }
+    }
+}
+
+impl OOutput1<u64> for Output
+{
+    fn o_put_1(&self, t: u64)
+    {
+        let mut num: u64 = t;
+        let mut arr: [u8; 20] = [0; 20];
+        let mut i: i64 = 0;
+        let mut j: i64;
+        let mut c: u8;
+        if num == 0 {
+            arr[0] = 48;
+            i = 1;
+        }
+        while num > 0 {
+            arr[i as usize] = (num % 10) as u8 + 48;
+            num = num / 10;
+            i = i + 1;
+        }
+        j = i - 1;
+        while j >= 0 {
+            c = arr[j as usize];
+            syscalls::sys_write(1, &c, 1);
+            j = j - 1;
+        }
+    }
+}
+
+impl OOutput1<&i64> for Output
+{
+    fn o_put_1(&self, t: &i64)
+    {
+        let mut num: i64 = *t;
+        let mut arr: [u8; 20] = [0; 20];
+        let mut i: i64 = 0;
+        let mut j: i64;
+        let mut c: u8;
+        let mut neg: bool = false;
+        if num == 0 {
+            arr[0] = 48;
+            i = 1;
+        }
+        if num < 0 {
+            neg = true;
+            num = -num;
+        }
+        while num > 0 {
+            arr[i as usize] = (num % 10) as u8 + 48;
+            num = num / 10;
+            i = i + 1;
+        }
+        if neg {
+            syscalls::sys_write(1, &45, 1);
+        }
+        j = i - 1;
+        while j >= 0 {
+            c = arr[j as usize];
+            syscalls::sys_write(1, &c, 1);
+            j = j - 1;
+        }
+    }
+}
+
+impl OOutput1<i64> for Output
+{
+    fn o_put_1(&self, t: i64)
+    {
+        let mut num: i64 = t;
+        let mut arr: [u8; 20] = [0; 20];
+        let mut i: i64 = 0;
+        let mut j: i64;
+        let mut c: u8;
+        let mut neg: bool = false;
+        if num == 0 {
+            arr[0] = 48;
+            i = 1;
+        }
+        if num < 0 {
+            neg = true;
+            num = -num;
+        }
+        while num > 0 {
+            arr[i as usize] = (num % 10) as u8 + 48;
+            num = num / 10;
+            i = i + 1;
+        }
+        if neg {
+            syscalls::sys_write(1, &45, 1);
+        }
+        j = i - 1;
+        while j >= 0 {
+            c = arr[j as usize];
+            syscalls::sys_write(1, &c, 1);
+            j = j - 1;
+        }
+    }
+}
+
+impl OOutput1<f32> for Output
+{
+    fn o_put_1(&self, t: f32)
+    {
+        let mut num: f32 = t;
+        let mut arr: [u8; 20] = [0; 20];
+        let mut i: i64 = 0;
+        let mut j: i64;
+        let mut c: u8;
+        let mut neg: bool = false;
+        if num == 0.0 {
+            arr[0] = 48;
+            i = 1;
+        }
+        if num < 0.0 {
+            neg = true;
+            num = -num;
+        }
+        while num > 0.0 {
+            arr[i as usize] = (num % 10.0) as u8 + 48;
+            num = num / 10.0;
+            i = i + 1;
+        }
+        if neg {
+            syscalls::sys_write(1, &45, 1);
+        }
+        j = i - 1;
+        while j >= 0 {
+            c = arr[j as usize];
+            syscalls::sys_write(1, &c, 1);
+            j = j - 1;
+        }
+    }
+}
+
+impl OOutput1<f64> for Output
+{
+    fn o_put_1(&self, t: f64)
+    {
+        let mut num: f64 = t;
+        let mut arr: [u8; 20] = [0; 20];
+        let mut i: i64 = 0;
+        let mut j: i64;
+        let mut c: u8;
+        let mut neg: bool = false;
+        if num == 0.0 {
+            arr[0] = 48;
+            i = 1;
+        }
+        if num < 0.0 {
+            neg = true;
+            num = -num;
+        }
+        while num > 0.0 {
+            arr[i as usize] = (num % 10.0) as u8 + 48;
+            num = num / 10.0;
+            i = i + 1;
+        }
+        if neg {
+            syscalls::sys_write(1, &45, 1);
+        }
+        j = i - 1;
+        while j >= 0 {
+            c = arr[j as usize];
+            syscalls::sys_write(1, &c, 1);
+            j = j - 1;
+        }
+    }
+}
+
+
 macro_rules! input {
     ($arg:expr) => {
         Input.take_inp_1($arg);
@@ -173,52 +527,27 @@ macro_rules! input {
 }
 
 macro_rules! output {
-    ($($arg:tt)*) => {
+    ($($arg:expr),*) => {
         $(  
-            syscalls::sys_write(1, $arg.as_bytes().as_ptr(), $arg.len().try_into().unwrap());
+            Output.o_put_1($arg);
         )*
     };
 }
 
 
-
-
-
 fn main() {
 
-    let server_fd: i64 = create_socket(2, "SOCK_STREAM", 0);
+    let mut a: i64 = 0;
+    output!("Enter a number: ");
+    input!(&mut a);
 
-    if server_fd < 0 {
-        output!("Socket creation failed\n");
-        return;
-    } else {
-        output!("Socket creation successful\n");
-    }
-      
-    let ip_addr = Ipv4Addr::new(127, 0, 0, 1);
-    let port = 8080;
-    
-    let mut socket_addr = SocketAddr::V4(SocketAddrV4::new(ip_addr, port));
+    let mut strin = String::new();
+    output!("Enter a string: ");
+    input!(&mut strin, 100, '\n');
 
-    let mut addr_len = std::mem::size_of::<SocketAddr>() as u32;
-    
-    let bs = bind_socket(server_fd as u64, &socket_addr, 16);
+    output!("The number is: ", a ,"\n");
 
-    if listen_socket(server_fd as u64, 16) < 0 {
-        output!("Listen failed\n");
-        return;
-    } else {
-        output!("Listen successful\n");
-    }
+    output!("The string is: ", strin, "\n");
 
-    let new_socket = accept_socket(server_fd as u64, &mut socket_addr, &addr_len);
-
-    println!("{}", new_socket);
-
-    if new_socket == -1 {
-        output!("Accept failed\n");
-        return
-    } else {
-        output!("Accept successful\n");
-    }
+    output!("The number is: ", a ,"\n");
 }
