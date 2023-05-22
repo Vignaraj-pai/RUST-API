@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 syscalls = {path = "../Syscalls"}
+libc = "0.2"
